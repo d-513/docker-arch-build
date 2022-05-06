@@ -22,7 +22,7 @@ else
     echo 'MAKEFLAGS="-j' + nproc + '"' | sudo tee -a /etc/makepkg.conf
   fi
   echo 'BUILDENV=(!distcc !color ccache check sign)' | sudo tee -a /etc/makepkg.conf
-  echo 'PKGDEST="/repo"' | sudo tee -a /etc/makepkg.conf
+  #echo 'PKGDEST="/repo"' | sudo tee -a /etc/makepkg.conf
   cp /etc/makepkg.conf /config/makepkg.conf
 fi
 
