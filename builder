@@ -35,6 +35,8 @@ for pkg in $pkglist; do
     echo "adding package $zst"
     mv *.pkg.* /repo
     repo-add --nocolor -s -R /repo/repo.db.tar.gz /repo/$zst
+  else
+    rm *.pkg.*
   fi
   popd
 done
