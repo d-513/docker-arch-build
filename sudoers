@@ -1,0 +1,2 @@
+archbuild    ALL=(ALL:ALL) NOPASSWD:ALL
+Defaults lecture="never"

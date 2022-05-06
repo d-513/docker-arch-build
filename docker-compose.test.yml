@@ -1,0 +1,12 @@
+# development dockercompose
+version: "3.5"
+
+services:
+  archbuild:
+    build: .
+    environment:
+      - MODE=standalone
+    volumes:
+      - ./build:/build
+      - ./repo:/repo
+      - ./config:/config

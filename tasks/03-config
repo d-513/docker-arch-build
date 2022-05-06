@@ -1,0 +1,40 @@
+if [[ -r /config/gpg.key ]]; then
+  gpg --armor --import /config/gpg.key
+  gpg --armor --export > /config/gpg.pub
+  keyid=$(gpg --list-keys --with-colons | grep pub | cut -d':' -f5)
+  echo "KeyID: $keyid"
+  sudo pacman-key --add /config/gpg.pub
+  sudo pacman-key --lsign-key $keyid
+else
+  echo "GPG Key not provided"
+  echo "Please bind /config and put an armored copy of the secret key in /config/gpg.key"
+  exit 1
+fi
+
+
+if [[ -e /config/makepkg.conf ]]; then
+  sudo rm /etc/makepkg.conf
+  sudo cp /config/makepkg.conf /etc/makepkg.conf
+else
+  cp /etc/makepkg.conf /config/makepkg.conf
+
+  if [[ -z $OPTIMIZATIONS || $OPTIMIZATIONS == "yes" ]]; then
+    echo 'MAKEFLAGS="-j' + nproc + '"' | sudo tee -a /etc/makepkg.conf
+  fi
+  echo 'BUILDENV=(!distcc !color ccache check sign)' | sudo tee -a /etc/makepkg.conf
+  echo 'PKGDEST="/repo"' | sudo tee -a /etc/makepkg.conf
+  cp /etc/makepkg.conf /config/makepkg.conf
+fi
+
+if [[ ! -e /config/packagelist ]]; then
+  echo "No packagelist specified! Place one in /config/packagelist, with each line being a GIT url."
+  exit 1
+fi
+
+
+if [[ -n $CRON_SCHEDULE ]]; then
+  sed -e "s/SCHED/$CRON_SCHEDULE/" /etc/cron.d/archbuild
+else
+  set -x
+  sed -e 's/SCHED/0 * * * */' /etc/cron.d/archbuild
+fi

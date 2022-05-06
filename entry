@@ -1,0 +1,24 @@
+#!/bin/bash
+cd /internal/
+
+tasks=$(find ./tasks/ -type f | sort)
+
+for f in $tasks; do
+  echo "Running task: $f"
+  su archbuild -c "bash "$f" -H" || break
+done
+
+if [[ -z $MODE ]]; then
+  echo "No mode specified!"
+  echo "Please specify MODE environment variable:"
+  echo "set to either 'cron' or 'standalone'"
+  exit 1
+elif [[ $MODE == "cron" ]]; then
+  echo "Running crond..."
+  exec crond -f
+elif [[ $MODE == "standalone" ]]; then
+  exec su archbuild -c "/internal/builder"
+else
+  echo "No valid MODE specified..."
+  exit 1
+fi

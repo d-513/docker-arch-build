@@ -1,0 +1,3 @@
+set -x
+sudo pacman -Syu --noconfirm >> /dev/null
+sudo pacman-key --init

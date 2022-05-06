@@ -1,0 +1,7 @@
+sudo mkdir -p /build
+sudo mkdir -p /config
+sudo mkdir -p /repo
+
+sudo chown -R archbuild:archbuild /config
+sudo chown -R archbuild:archbuild /build
+sudo chown -R archbuild:archbuild /repo
